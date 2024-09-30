@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
 
-export default function App() {
-  return (
-    <div>App</div>
-  )
+export default class App extends PureComponent {
+  render() {
+    return (
+      <div>App</div>
+    )
+  }
 }
