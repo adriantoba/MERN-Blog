@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    profilePicture: {
+      type: String,
+      defualt:
+        "https://ca.slack-edge.com/T0266FRGM-U011PLSSMA9-g7e8a6705c42-512",
+    },
   },
   { timestamps: true }
 );
