@@ -2,12 +2,17 @@ import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice";
+import SwitchDark from "./SwitchDark";
 
 export default function Header() {
+  const dispatch = useDispatch();
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+  const [enabled, setEnabled] = useState(theme === "dark");
   return (
     <Navbar className="border-b-2">
       <Link
@@ -31,10 +36,21 @@ export default function Header() {
         <AiOutlineSearch />
       </Button>
       <div className="flex gap-2 md:order-2">
-        <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
+        {/* <Button
+          className="w-12 h-10 hidden sm:inline"
+          color="gray"
+          pill
+          onClick={() => dispatch(toggleTheme())}
+        >
           <FaMoon />
-        </Button>
-
+        </Button> */}
+        <div className="">
+          <SwitchDark
+            checked={theme === "dark"}
+            onChange={(e) => setEnabled(e.target.checked)}
+            onClick={() => dispatch(toggleTheme())}
+          />
+        </div>
         {currentUser ? (
           <Dropdown
             className="shadow-md rounded-md"
