@@ -44,13 +44,13 @@ export default function Header() {
         >
           <FaMoon />
         </Button> */}
-        <div className="">
-          <SwitchDark
-            checked={theme === "dark"}
-            onChange={(e) => setEnabled(e.target.checked)}
-            onClick={() => dispatch(toggleTheme())}
-          />
-        </div>
+
+        <SwitchDark
+          checked={theme === "dark"}
+          onChange={(e) => setEnabled(e.target.checked)}
+          onClick={() => dispatch(toggleTheme())}
+        />
+
         {currentUser ? (
           <Dropdown
             className="shadow-md rounded-md"

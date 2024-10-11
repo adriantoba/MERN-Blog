@@ -3,7 +3,7 @@ import { FaMoon, FaSun } from "react-icons/fa";
 
 export default function SwitchDark(props) {
   return (
-    <div>
+    <div className="p-4">
       <label className="cursor-pointer">
         <input type="checkbox" className="hidden" {...props} />
         <div
