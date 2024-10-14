@@ -67,7 +67,7 @@ export default function Header() {
               </span>
             </Dropdown.Header>
 
-            <Link to={"/dash?tab=profile"}>
+            <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
