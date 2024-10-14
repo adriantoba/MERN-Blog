@@ -54,7 +54,7 @@ export const signIn = async (req, res, next) => {
       );
     }
     const token = jwt.sign(
-      { userId: validUser._id },
+      { id: validUser._id },
       process.env.JWT_SECRET //,{expiresIn:'1d'} -- if left blank the toke expires after the session ends (user closes the page)
     );
 
