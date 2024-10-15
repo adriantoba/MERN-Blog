@@ -2,11 +2,12 @@ import { Sidebar } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { HiArrowSmRight, HiUser } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 
 export default function DashSidebar() {
   const location = useLocation();
+  const { currentUser, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [tab, setTab] = useState("");
   useEffect(() => {
