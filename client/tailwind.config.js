@@ -10,7 +10,9 @@ export default {
       "50%": "50%",
       16: "4rem",
     },
+
     extend: {},
   },
   plugins: [flowbite.plugin()],
+  listStyleType: false,
 };
