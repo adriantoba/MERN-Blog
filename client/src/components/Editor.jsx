@@ -80,7 +80,7 @@ import "ckeditor5/ckeditor5.css";
 
 import "../Index.css";
 
-export default function Editor() {
+export default function Editor({ onEditorReady, onChange }) {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -393,6 +393,16 @@ export default function Editor() {
     translations: [translations],
   };
 
+  const handleReady = (editor) => {
+    editorRef.current = editor;
+    onChange(editor);
+
+    editor.model.document.on("change:data", () => {
+      const data = editor.getData();
+      onChange(data);
+    });
+  };
+
   return (
     <div>
       <div className="main-container no-tailwindcss-base">
@@ -403,7 +413,11 @@ export default function Editor() {
           <div className="editor-container__editor">
             <div ref={editorRef}>
               {isLayoutReady && (
-                <CKEditor editor={ClassicEditor} config={editorConfig} />
+                <CKEditor
+                  editor={ClassicEditor}
+                  config={editorConfig}
+                  onReady={handleReady}
+                />
               )}
             </div>
           </div>
