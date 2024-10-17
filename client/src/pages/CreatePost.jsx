@@ -34,7 +34,7 @@ export default function CreatePost() {
             <option value="cat4">Option 4</option>
           </Select>
         </div>
-        <div>
+        <div className="flex items-center justify-center">
           <Editor />
         </div>
       </form>
