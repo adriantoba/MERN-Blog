@@ -117,7 +117,7 @@ export const getPosts = async (req, res, next) => {
 };
 
 export const publishPost = async (req, res, next) => {
-  const { title, content, defaultImage } = req.body;
+  const { title, content, image, category } = req.body;
 
   if (!title || !content) {
     return next(errorHandler(400, "Title and content are required"));
@@ -131,9 +131,10 @@ export const publishPost = async (req, res, next) => {
 
   const newPost = new Post({
     title,
+    category,
     content,
     slug,
-    defaultImage,
+    image,
     userId: req.user.id,
   });
 

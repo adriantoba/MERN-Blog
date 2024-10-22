@@ -202,7 +202,7 @@ const PublishPost = () => {
                           name="defaultImage"
                           value={src}
                           onChange={() =>
-                            setFormData({ ...formData, defaultImage: src })
+                            setFormData({ ...formData, image: src })
                           }
                         />
                       </div>
