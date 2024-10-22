@@ -1,7 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "../styles/ckeditor5-content.css";
-import { TextInput, Datepicker, ToggleSwitch, Button } from "flowbite-react";
+import {
+  TextInput,
+  Datepicker,
+  ToggleSwitch,
+  Button,
+  Select,
+} from "flowbite-react";
 
 const PublishPost = () => {
   const { postSlug } = useParams();
@@ -10,11 +17,15 @@ const PublishPost = () => {
   const [postContent, setPostContent] = useState("");
   const [title, setTitle] = useState("");
   const [images, setImages] = useState([]);
+  const [category, setCategory] = useState("");
   const [defaultImage, setDefaultImage] = useState("");
+  const [publishError, setPublishError] = useState(null);
+  const [formData, setFormData] = useState({});
   const [leftWidth, setLeftWidth] = useState("50%");
   const [isResizing, setIsResizing] = useState(false);
   const containerRef = useRef(null);
-  const [scheduleDate, setScheduleDate] = useState(null);
+  //const [scheduleDate, setScheduleDate] = useState(null);
+  const navigate = useNavigate();
 
   const minLeftWidth = 200;
   const minRightWidth = 200;
@@ -34,8 +45,11 @@ const PublishPost = () => {
           setError(null);
           setLoading(false);
           setPostContent(data.drafts[0].content);
-          setTitle(data.title);
-          setImages(data.images || "");
+          setFormData({
+            title: data.drafts[0].title,
+            category: data.drafts[0].category,
+            content: data.drafts[0].content,
+          });
         }
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -102,31 +116,38 @@ const PublishPost = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  const handlePublish = async () => {
+  const handlePublish = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("/api/post/publish", {
+      const res = await fetch("/api/post/publish", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content: postContent, defaultImage }),
+        body: JSON.stringify(formData),
       });
-      const result = await response.json();
-      if (response.ok) {
-        // Navigate to the published post or another page
-      } else {
-        console.error(result.message);
+      const data = await res.json();
+      if (!res.ok) {
+        setPublishError(data.message);
+        return;
+      }
+
+      if (res.ok) {
+        setPublishError(null);
+        navigate(`/post/${data.slug}`);
       }
     } catch (error) {
-      console.error("Error publishing post:", error);
+      console.error("Error creating post:", error);
     }
   };
 
+  console.log("formData:", formData);
   const handleDelete = async () => {};
   return (
     <div className="min-h-screen">
       <h1 className="text-center text-3xl font-semibold">Publish Post</h1>
       <div ref={containerRef} className="h-screen flex">
+        {/* Left side */}
         <div
           className={`m-3 no-scrollbar flex-shrink-0 flex items-center justify-center overflow-auto border-4
              border-[#3B3B98] rounded-lg ${isResizing ? "unselectable" : ""}`}
@@ -139,14 +160,15 @@ const PublishPost = () => {
             />
           </div>
         </div>
-
+        {/* Resizer */}
         <div
           className="w-5 bg-black cursor-col-resize"
           onMouseDown={handleMouseDown}
-        ></div>
-        <div className="flex flex-col">
+        />
+        {/* Right side */}
+        <div className="no-scrollbar flex flex-col overflow-auto w-full">
           <div
-            className={`m-3 flex-grow flex justify-center ${
+            className={`m-3 flex-grow flex  ${
               isResizing ? "unselectable" : ""
             } border-4
              border-[#3B3B98] rounded-lg `}
@@ -156,7 +178,9 @@ const PublishPost = () => {
               <TextInput
                 id="title"
                 label="Title"
+                placeholder={title}
                 value={title}
+                onChange={() => setFormData({ ...formData, title: title })}
                 required
               ></TextInput>
 
@@ -177,7 +201,9 @@ const PublishPost = () => {
                           type="radio"
                           name="defaultImage"
                           value={src}
-                          onChange={() => setDefaultImage(src)}
+                          onChange={() =>
+                            setFormData({ ...formData, defaultImage: src })
+                          }
                         />
                       </div>
                     ))
@@ -200,6 +226,20 @@ const PublishPost = () => {
                   className="w-full"
                 />
               </div> */}
+                <div className="flex flex-col m-4  items-center">
+                  <Select
+                    value={category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                  >
+                    <option value="uncategorized">Select a category </option>
+                    <option value="cat1">Option 1</option>
+                    <option value="cat2">Option 2</option>
+                    <option value="cat3">Option 3</option>
+                    <option value="cat4">Option 4</option>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
