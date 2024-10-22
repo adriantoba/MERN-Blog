@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextInput, Select, Button } from "flowbite-react";
 import Editor from "../components/Editor";
+import "../styles/ckeditor5-content.css";
 
 export default function CreatePost() {
   const [editorContent, setEditorContent] = useState("");

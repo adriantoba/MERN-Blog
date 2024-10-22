@@ -78,7 +78,7 @@ import translations from "ckeditor5/translations/ro.js";
 
 import "ckeditor5/ckeditor5.css";
 
-import "../Index.css";
+import "../index.css";
 
 export default function Editor({ onEditorReady, onChange }) {
   const editorContainerRef = useRef(null);
@@ -404,7 +404,7 @@ export default function Editor({ onEditorReady, onChange }) {
   };
 
   return (
-    <div>
+    <div className="">
       <div className="main-container no-tailwindcss-base">
         <div
           className="editor-container editor-container_classic-editor editor-container_include-style"

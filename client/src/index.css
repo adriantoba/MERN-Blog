@@ -1,7 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   .no-tailwindcss-base {
@@ -21,6 +24,22 @@
       margin: revert;
       padding: revert;
     }
+    img {
+      max-width: revert;
+      height: revert;
+      display: revert;
+      margin: revert;
+      padding: revert;
+      border: revert;
+    }
+    figcaption {
+      font-size: revert;
+      font-style: revert;
+      color: revert;
+      margin: revert;
+      padding: revert;
+      height: revert;
+    }
   }
 }
 
@@ -30,11 +49,11 @@
     position: relative !important;
   }
 }
-
-.ck-body-wrapper {
-  position: fixed;
-  z-index: 1300 !important;
+:root {
+  --ck-z-default: 100;
+  --ck-z-panel: calc(var(--ck-z-default) + 999);
 }
+
 .main-container {
   font-family: "Roboto";
   width: 75vw;
@@ -151,6 +170,10 @@
 .ck-content span.spoiler {
   background: #000;
   color: #000;
+}
+
+.image__caption_highlighted {
+  min-height: 30px;
 }
 
 .table {
@@ -276,5 +299,21 @@
   --ck-color-link-default: hsl(190, 100%, 75%);
 }
 
-@tailwind components;
-@tailwind utilities;
+.unselectable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
