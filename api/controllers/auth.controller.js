@@ -2,6 +2,13 @@ import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import md5 from "md5";
+
+const getGravatarUrl = (email) => {
+  const emailHash = md5(email.trim().toLowerCase());
+  const defaultAvatarType = "retro";
+  return `https://www.gravatar.com/avatar/${emailHash}?d=${defaultAvatarType}`;
+};
 
 export const signUp = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -18,11 +25,13 @@ export const signUp = async (req, res, next) => {
   }
 
   const hashPassword = bcryptjs.hashSync(password, 10);
+  const generatedProfilePicture = getGravatarUrl(email);
 
   const newUser = new User({
     username,
     email,
     password: hashPassword,
+    profilePicture: generatedProfilePicture,
   });
 
   try {
