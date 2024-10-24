@@ -71,10 +71,12 @@ import {
   TodoList,
   Underline,
   Undo,
+  WordCount,
 } from "ckeditor5";
 import translations from "ckeditor5/translations/ro.js";
 import "ckeditor5/ckeditor5.css";
 import "../index.css";
+import { set } from "mongoose";
 
 const editorConfig = {
   toolbar: {
@@ -182,6 +184,7 @@ const editorConfig = {
     TodoList,
     Underline,
     Undo,
+    WordCount,
   ],
   balloonToolbar: [
     "bold",
@@ -341,12 +344,20 @@ const editorConfig = {
     ],
   },
   translations: [translations],
+  wordCount: {
+    onUpdate: (stats) => {
+      console.log(stats.words);
+    },
+  },
 };
 
-export default function Editor({ onChange, data }) {
+export default function Editor({ onChange, data, onWordCountChange }) {
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(true);
   const [isEditorReady, setIsEditorReady] = useState(false);
+  
+
+  console.log();
 
   useEffect(() => {
     if (editorRef.current && isEditorReady && data) {
@@ -361,6 +372,11 @@ export default function Editor({ onChange, data }) {
     editor.model.document.on("change:data", () => {
       const data = editor.getData();
       onChange(data);
+    });
+    editor.plugins.get("WordCount").on("update", (evt, stats) => {
+      if (typeof onWordCountChange === "function") {
+        onWordCountChange(stats.words);
+      }
     });
   };
 

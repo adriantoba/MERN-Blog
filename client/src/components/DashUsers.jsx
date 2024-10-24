@@ -101,7 +101,7 @@ export default function DashUsers() {
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             {users.map((user) => (
-              <Table.Body className="divide-y">
+              <Table.Body key={user._id} className="divide-y">
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
                     {new Date(user.createdAt).toLocaleDateString()}

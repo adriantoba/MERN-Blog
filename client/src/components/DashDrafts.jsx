@@ -21,7 +21,7 @@ export default function DashDrafts() {
 
       const timer = setTimeout(() => {
         setMessage("");
-      }, 3000000);
+      }, 300);
 
       return () => clearTimeout(timer);
     }
@@ -118,7 +118,7 @@ export default function DashDrafts() {
               </Table.HeadCell>
             </Table.Head>
             {userPosts.map((post) => (
-              <Table.Body className="divide-y">
+              <Table.Body key={post._id} className="divide-y">
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
                     {new Date(post.updatedAt).toLocaleDateString()}

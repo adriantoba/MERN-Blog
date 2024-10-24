@@ -126,6 +126,12 @@ export default function EditPost() {
               const title = h1 ? h1.textContent : `draft_${Date.now()}`;
               setFormData((prevData) => ({ ...prevData, content, title }));
             }}
+            onWordCountChange={(wordCount) => {
+              setFormData((prevData) => ({
+                ...prevData,
+                wordCount,
+              }));
+            }}
           />
         </div>
         <div className="flex flex-col gap-4 justify-center items-center">

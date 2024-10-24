@@ -5,10 +5,8 @@ import Editor from "../components/Editor";
 import "../styles/ckeditor5-content.css";
 
 export default function CreatePost() {
-  const [editorContent, setEditorContent] = useState("");
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  console.log(formData);
 
   const [category, setCategory] = useState("uncategorized");
   const navigate = useNavigate();
@@ -61,6 +59,7 @@ export default function CreatePost() {
       console.error("Error creating post:", error);
     }
   };
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl font-semibold">Create Post</h1>
@@ -78,6 +77,12 @@ export default function CreatePost() {
 
               // Update the formData state
               setFormData({ ...formData, content: content, title });
+            }}
+            onWordCountChange={(wordCount) => {
+              setFormData((prevData) => ({
+                ...prevData,
+                wordCount,
+              }));
             }}
           />
         </div>
