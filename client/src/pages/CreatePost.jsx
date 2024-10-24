@@ -37,6 +37,30 @@ export default function CreatePost() {
       console.error("Error creating post:", error);
     }
   };
+  const handleSaveDraft = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/post/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPublishError(data.message);
+        return;
+      }
+
+      if (res.ok) {
+        setPublishError(null);
+        navigate(`/dashboard?tab=drafts`);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl font-semibold">Create Post</h1>
@@ -77,6 +101,13 @@ export default function CreatePost() {
           gradientDuoTone="purpleToPink"
         >
           Publish
+        </Button>
+        <Button
+          type="submit"
+          onClick={handleSaveDraft}
+          gradientDuoTone="purpleToPink"
+        >
+          Save
         </Button>
       </form>
     </div>

@@ -1,12 +1,11 @@
 import { Button, Modal, Table, Toast } from "flowbite-react";
-import { set } from "mongoose";
-
+import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { HiOutlineExclamationCircle, HiCheck } from "react-icons/hi";
+import { HiCheck, HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function DashPosts() {
+export default function DashDrafts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
   const [showmore, setShowMore] = useState(true);
@@ -16,14 +15,28 @@ export default function DashPosts() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    console.log("Location State:", location.state);
+    if (location.state && location.state.message) {
+      setMessage(location.state.message);
+
+      const timer = setTimeout(() => {
+        setMessage("");
+      }, 3000000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    const fetchDrafts = async () => {
       try {
         const res = await fetch(
-          `/api/post/getpost?userId=${currentUser._id}&isDraft=false`
+          `/api/post/getpost?userId=${currentUser._id}&isDraft=true`
         );
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
+
           if (data.posts.length < 9) {
             setShowMore(false);
           }
@@ -33,20 +46,9 @@ export default function DashPosts() {
       }
     };
     if (currentUser.isAdmin) {
-      fetchPosts();
+      fetchDrafts();
     }
   }, [currentUser._id]);
-
-  useEffect(() => {
-    if (location.state && location.state.message) {
-      setMessage(location.state.message);
-      const timer = setTimeout(() => {
-        setMessage("");
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [location.state]);
 
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
@@ -92,15 +94,15 @@ export default function DashPosts() {
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
           {message && (
-            <Toast>
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                <HiCheck className="h-5 w-5" />
-              </div>
-              <div className="ml-3 text-sm font-normal">{message}</div>
-              <Toast.Toggle />
-            </Toast>
+            <div className="absolute w-full max-w-xs p-4 inset-x-0 bottom-0 flex items-center justify-center z-50">
+              <Toast className="bg-green-400">
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                  <HiCheck className="h-5 w-5" />
+                </div>
+                <div className="ml-3 text-sm font-normal">{message}</div>
+              </Toast>
+            </div>
           )}
-
           <Table hoverable className="shadow-md">
             <Table.Head>
               <Table.HeadCell>Date Updated</Table.HeadCell>
@@ -110,6 +112,9 @@ export default function DashPosts() {
               <Table.HeadCell>Delete</Table.HeadCell>
               <Table.HeadCell>
                 <span>Edit</span>
+              </Table.HeadCell>
+              <Table.HeadCell>
+                <span>Publish</span>
               </Table.HeadCell>
             </Table.Head>
             {userPosts.map((post) => (
@@ -157,6 +162,14 @@ export default function DashPosts() {
                       <span>Edit</span>
                     </Link>
                   </Table.Cell>
+                  <Table.Cell>
+                    <Link
+                      to={`/publish-post/${post.slug}`}
+                      className="font-bold bg-green-700 p-2 transition duration-700 rounded-md text-white  shadow-sm  hover:scale-95 flex justify-center items-center"
+                    >
+                      <span>Publish</span>
+                    </Link>
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             ))}
@@ -171,7 +184,7 @@ export default function DashPosts() {
           )}
         </>
       ) : (
-        <p>You have no posts yet</p>
+        <p>You have no drafts yet</p>
       )}
       <Modal
         show={showModal}

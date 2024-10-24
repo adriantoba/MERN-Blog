@@ -9,16 +9,17 @@ import {
   Button,
   Select,
 } from "flowbite-react";
+import { useSelector } from "react-redux";
 
 const PublishPost = () => {
   const { postSlug } = useParams();
+  const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [postContent, setPostContent] = useState("");
   const [title, setTitle] = useState("");
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState("");
-  const [defaultImage, setDefaultImage] = useState("");
   const [publishError, setPublishError] = useState(null);
   const [formData, setFormData] = useState({});
   const [leftWidth, setLeftWidth] = useState("50%");
@@ -34,8 +35,10 @@ const PublishPost = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/post/getdrafts?slug=${postSlug}`);
+        const res = await fetch(`/api/post/getpost?slug=${postSlug}`);
         const data = await res.json();
+        console.log(data);
+
         if (!res.ok) {
           setError(true);
           setLoading(false);
@@ -44,11 +47,12 @@ const PublishPost = () => {
         if (res.ok) {
           setError(null);
           setLoading(false);
-          setPostContent(data.drafts[0].content);
+          setPostContent(data.posts[0].content);
           setFormData({
-            title: data.drafts[0].title,
-            category: data.drafts[0].category,
-            content: data.drafts[0].content,
+            _id: data.posts[0]._id,
+            title: data.posts[0].title,
+            category: data.posts[0].category,
+            content: data.posts[0].content,
           });
         }
       } catch (error) {
@@ -119,13 +123,16 @@ const PublishPost = () => {
   const handlePublish = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/post/publish", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `/api/post/publish/${formData._id}/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       if (!res.ok) {
         setPublishError(data.message);
@@ -246,7 +253,9 @@ const PublishPost = () => {
           <div className="mt-auto flex space-x-4 justify-between p-3">
             <Button
               onClick={() => {
-                /* Handle edit logic */
+                navigate(`/edit-post/${formData._id}`, {
+                  state: { fromPublish: true },
+                });
               }}
               className="flex-grow"
             >

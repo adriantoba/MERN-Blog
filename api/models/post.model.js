@@ -25,6 +25,11 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: "uncategorized",
     },
+    isDraft: {
+      type: Boolean,
+      default: true,
+    },
+
     slug: {
       type: String,
       required: true,
