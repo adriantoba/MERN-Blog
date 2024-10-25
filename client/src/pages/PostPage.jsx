@@ -2,6 +2,7 @@ import { Button, Spinner } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../styles/ckeditor5-content.css";
+import CommentSection from "../components/CommentSection";
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -66,6 +67,7 @@ export default function PostPage() {
         dangerouslySetInnerHTML={{ __html: post && post.content }}
         className="ck-content no-tailwindcss-base p-3 max-w-2xl mx-auto w-full"
       ></div>
+      <CommentSection postId={post._id} />
     </main>
   );
 }

@@ -7,7 +7,6 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  // console.log(req.user, req.params.userId);
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
@@ -115,6 +114,19 @@ export const getUsers = async (req, res, next) => {
     });
 
     res.status(200).json({ users: usersNoPass, totalUsers, lastMonthUsers });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    const { password, email, ...rest } = user._doc;
+    res.status(200).json(rest);
   } catch (error) {
     return next(error);
   }
