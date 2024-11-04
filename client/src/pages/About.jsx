@@ -1,7 +1,10 @@
-import React from 'react'
+import React from "react";
+import AnimatedWave from "../components/AnimatedWave";
 
 export default function About() {
   return (
-    <div>About</div>
-  )
+    <div className="">
+      <AnimatedWave />
+    </div>
+  );
 }
