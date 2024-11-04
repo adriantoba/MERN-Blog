@@ -8,10 +8,12 @@ import {
   HiOutlineUserGroup,
   HiX,
   HiMenu,
+  HiChartPie,
 } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
+import { current } from "@reduxjs/toolkit";
 
 export default function DashSidebar() {
   const location = useLocation();
@@ -48,7 +50,7 @@ export default function DashSidebar() {
   };
 
   return (
-    <div className="relative md:h-screen">
+    <div className="md:h-full">
       <div className="flex flex-col items-center mx-auto z-40">
         <button
           className={`md:hidden p-2 text-gray-500 focus:outline-none transition-transform duration-300 ${
@@ -66,13 +68,23 @@ export default function DashSidebar() {
         onClick={toggleSidebar}
       ></div>
       <Sidebar
-        className={`fixed top-0 left-0 z-50 w-full h-auto shadow-lg transform transition-transform duration-300 md:relative md:translate-y-0 ${
+        className={`fixed top-0 left-0 z-50 w-full h-auto md:h-full shadow-lg transform transition-transform duration-300 md:relative md:translate-y-0 ${
           isSidebarOpen ? "translate-y-0" : "-translate-y-full"
-        } md:h-full`}
+        } `}
       >
         <Sidebar.Items>
           <Sidebar.ItemGroup className="flex flex-col gap 1 ">
-            <Link to="/dashboard?tab=profile">
+            <Link to="/dashboard?tab=dash">
+              {currentUser && currentUser.isAdmin && (
+                <Sidebar.Item
+                  active={tab === "dash"}
+                  as="div"
+                  icon={HiChartPie}
+                  onClick={toggleSidebar}
+                >
+                  Dashboard
+                </Sidebar.Item>
+              )}
               <Sidebar.Item
                 active={tab === "profile"}
                 as="div"
